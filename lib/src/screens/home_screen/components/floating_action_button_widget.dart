@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:todo/src/screens/home_screen/components/alert_dialog_widget.dart';
+import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_widget.dart';
 
 class FloatingActionButtonWidget extends StatelessWidget {
   const FloatingActionButtonWidget({super.key});
@@ -9,7 +9,7 @@ class FloatingActionButtonWidget extends StatelessWidget {
     showDialog(
       context: context,
       builder: (alertDialogContext) {
-        return AlertDialogWidget(
+        return SimpleDialogWidget(
           alertDialogContext: alertDialogContext,
         );
       },
