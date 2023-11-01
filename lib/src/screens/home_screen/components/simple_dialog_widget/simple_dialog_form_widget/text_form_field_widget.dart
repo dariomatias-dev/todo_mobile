@@ -6,12 +6,16 @@ class TextFormFieldWidget extends StatelessWidget {
     required this.controller,
     required this.title,
     required this.hintText,
+    required this.minLength,
+    required this.maxLength,
     this.maxLines,
   });
 
   final TextEditingController controller;
   final String title;
   final String hintText;
+  final int minLength;
+  final int maxLength;
   final int? maxLines;
 
   InputBorder get _outlineInputBorder => OutlineInputBorder(
@@ -45,6 +49,17 @@ class TextFormFieldWidget extends StatelessWidget {
           ),
         ),
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Preencha o campo';
+        } else if (value.length < minLength) {
+          return 'A quantidade mínima de caracteres é $minLength';
+        } else if (value.length > maxLength) {
+          return 'A quantiade máxima de caracteres é $maxLength';
+        }
+
+        return null;
+      },
     );
   }
 }

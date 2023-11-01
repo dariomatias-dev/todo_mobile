@@ -20,7 +20,7 @@ class SimpleDialogActionWidget extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
           padding: const EdgeInsets.symmetric(
-            vertical: 20.0,
+            vertical: 16.0,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18.0),
