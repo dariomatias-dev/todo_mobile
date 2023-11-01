@@ -28,8 +28,12 @@ class SimpleDialogWidget extends StatelessWidget {
   final Widget? body;
   final String actionTitle1;
   final String actionTitle2;
-  final void Function()? action1;
-  final void Function()? action2;
+  final void Function(VoidCallback closeSimpleDialog)? action1;
+  final void Function(VoidCallback closeSimpleDialog)? action2;
+
+  void _closeSimpleDialog() {
+    Navigator.pop(simpleDialogContext);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +78,7 @@ class SimpleDialogWidget extends StatelessWidget {
         if (content != null)
           Text(
             content!,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.justify,
             style: TextStyle(
               color: Colors.blueGrey.shade200,
               fontSize: 14.0,
@@ -86,9 +90,9 @@ class SimpleDialogWidget extends StatelessWidget {
           children: [
             SimpleDialogActionWidget(
               action: () {
-                Navigator.pop(simpleDialogContext);
-
-                if (action1 != null) action1!();
+                action1 != null
+                    ? action1!(_closeSimpleDialog)
+                    : _closeSimpleDialog();
               },
               title: actionTitle1,
               color: Colors.blueGrey.shade800.withOpacity(0.6),
@@ -96,9 +100,9 @@ class SimpleDialogWidget extends StatelessWidget {
             const SizedBox(width: 8.0),
             SimpleDialogActionWidget(
               action: () {
-                Navigator.pop(simpleDialogContext);
-
-                if (action2 != null) action2!();
+                action2 != null
+                    ? action2!(_closeSimpleDialog)
+                    : _closeSimpleDialog();
               },
               title: actionTitle2,
               color: Colors.blue.shade700,

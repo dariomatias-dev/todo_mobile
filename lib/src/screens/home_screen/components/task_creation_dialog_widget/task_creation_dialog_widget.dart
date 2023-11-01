@@ -8,9 +8,11 @@ import 'package:todo/src/screens/home_screen/models/form_data_model.dart';
 class TaskCreationDialogWidget extends StatefulWidget {
   const TaskCreationDialogWidget({
     super.key,
+    required this.screenContext,
     required this.simpleDialogContext,
   });
 
+  final BuildContext screenContext;
   final BuildContext simpleDialogContext;
 
   @override
@@ -23,13 +25,13 @@ class _TaskCreationDialogWidgetState extends State<TaskCreationDialogWidget> {
   final _titleFieldController = TextEditingController();
   final _descriptionFieldController = TextEditingController();
 
-  bool hasFormData() {
-    final formData = getData();
+  bool _hasFormData() {
+    final formData = _getData();
 
     return formData.title.isNotEmpty || formData.description.isNotEmpty;
   }
 
-  FormDataModel getData() {
+  FormDataModel _getData() {
     final title = _titleFieldController.text;
     final description = _descriptionFieldController.text;
 
@@ -45,6 +47,29 @@ class _TaskCreationDialogWidgetState extends State<TaskCreationDialogWidget> {
       titleFieldController: _titleFieldController,
       descriptionFieldController: _descriptionFieldController,
     );
+  }
+
+  void _showConfirmDiscardDialog(VoidCallback closeSimpleDialog) {
+    showDialog(
+      context: widget.screenContext,
+      barrierDismissible: false,
+      barrierColor: Colors.blue.withOpacity(0.2),
+      builder: (simpleDialogContext) {
+        return SimpleDialogWidget(
+          simpleDialogContext: simpleDialogContext,
+          title: 'Aviso',
+          content:
+              'Se fechar o formulário de criação de tarefa, todos os dados inseridos serão perdidos.\nDeseja sair mesmo assim?',
+          actionTitle1: 'Não',
+          actionTitle2: 'SIm',
+          action1: null,
+          action2: (closeSimpleDialog) {
+            Navigator.pop(simpleDialogContext);
+            closeSimpleDialog();
+          },
+        );
+      },
+    ).then((value) {});
   }
 
   @override
@@ -63,8 +88,22 @@ class _TaskCreationDialogWidgetState extends State<TaskCreationDialogWidget> {
       body: _getBody(),
       actionTitle1: 'Fechar',
       actionTitle2: 'Adicionar',
-      action1: null,
-      action2: null,
+      action1: (VoidCallback closeSimpleDialog) {
+        final thereIsData = _hasFormData();
+
+        if (thereIsData) {
+          _showConfirmDiscardDialog(closeSimpleDialog);
+        } else {
+          closeSimpleDialog();
+        }
+      },
+      action2: (closeSimpleDialog) {
+        if (_formKey.currentState!.validate()) {
+          //final data = _getData();
+
+          closeSimpleDialog();
+        }
+      },
     );
   }
 }

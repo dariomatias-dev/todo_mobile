@@ -8,7 +8,7 @@ class TextFormFieldWidget extends StatelessWidget {
     required this.hintText,
     required this.minLength,
     required this.maxLength,
-    this.maxLines,
+    this.maxLines = 1,
   });
 
   final TextEditingController controller;

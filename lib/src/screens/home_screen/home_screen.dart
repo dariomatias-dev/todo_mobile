@@ -43,7 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
       body: const Center(
         child: Text('Development'),
       ),
-      floatingActionButton: const FloatingActionButtonWidget(),
+      floatingActionButton: FloatingActionButtonWidget(
+        screenContext: context,
+      ),
     );
   }
 }
