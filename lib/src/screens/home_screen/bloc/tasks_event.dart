@@ -8,3 +8,14 @@ abstract class TasksEvent extends Equatable {
 }
 
 class TasksLoadingEvent extends TasksEvent {}
+
+class TaskCreateEvent extends TasksEvent {
+  const TaskCreateEvent({
+    required this.data,
+  });
+
+  final FormDataModel data;
+
+  @override
+  List<Object?> get props => [data];
+}

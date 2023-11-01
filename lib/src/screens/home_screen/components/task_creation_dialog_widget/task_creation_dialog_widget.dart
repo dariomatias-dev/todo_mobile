@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
+
 import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_widget.dart';
 import 'package:todo/src/screens/home_screen/components/task_creation_dialog_widget/task_creation_dialog_form_widget/task_creation_dialog_form_widget.dart';
 
@@ -8,11 +10,11 @@ import 'package:todo/src/screens/home_screen/models/form_data_model.dart';
 class TaskCreationDialogWidget extends StatefulWidget {
   const TaskCreationDialogWidget({
     super.key,
-    required this.screenContext,
+    required this.tasksBloc,
     required this.simpleDialogContext,
   });
 
-  final BuildContext screenContext;
+  final TasksBloc tasksBloc;
   final BuildContext simpleDialogContext;
 
   @override
@@ -49,9 +51,11 @@ class _TaskCreationDialogWidgetState extends State<TaskCreationDialogWidget> {
     );
   }
 
-  void _showConfirmDiscardDialog(VoidCallback closeSimpleDialog) {
+  void _showConfirmDiscardDialog(
+    VoidCallback closeSimpleDialog,
+  ) {
     showDialog(
-      context: widget.screenContext,
+      context: context,
       barrierDismissible: false,
       barrierColor: Colors.blue.withOpacity(0.2),
       builder: (simpleDialogContext) {
@@ -69,7 +73,7 @@ class _TaskCreationDialogWidgetState extends State<TaskCreationDialogWidget> {
           },
         );
       },
-    ).then((value) {});
+    );
   }
 
   @override
@@ -99,7 +103,13 @@ class _TaskCreationDialogWidgetState extends State<TaskCreationDialogWidget> {
       },
       action2: (closeSimpleDialog) {
         if (_formKey.currentState!.validate()) {
-          //final data = _getData();
+          final data = _getData();
+
+          widget.tasksBloc.add(
+                TaskCreateEvent(
+                  data: data,
+                ),
+              );
 
           closeSimpleDialog();
         }

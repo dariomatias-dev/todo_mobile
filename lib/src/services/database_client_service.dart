@@ -3,6 +3,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:todo/src/screens/home_screen/models/form_data_model.dart';
+
 class DatabaseClientService {
   static const _databaseName = "todo.db";
   static const _databaseVersion = 1;
@@ -38,23 +40,20 @@ class DatabaseClientService {
     ''');
   }
 
-  Future<String> add(
-    String title,
-    String description,
-  ) async {
+  Future<void> create(FormDataModel data) async {
     const uuid = Uuid();
     final id = uuid.v4();
 
-    return await _db.insert(
+    await _db.insert(
       table,
       {
         'id': id,
-        'title': title,
-        'description': description,
-        'isDone': false,
+        'title': data.title,
+        'description': data.description,
+        'isDone': 0,
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
-    ) as String;
+    );
   }
 
   Future<List<Map<String, dynamic>>> getAll() async {

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
 
 import 'package:todo/src/screens/home_screen/components/floating_action_button_widget.dart';
 
@@ -34,17 +37,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Lista de Tarefas'),
+    return BlocProvider(
+      create: (_) => TasksBloc(
+        databaseService: databaseService,
       ),
-      body: const Center(
-        child: Text('Development'),
-      ),
-      floatingActionButton: FloatingActionButtonWidget(
-        screenContext: context,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: const Text('Lista de Tarefas'),
+        ),
+        body: const Center(
+          child: Text('Development'),
+        ),
+        floatingActionButton: const FloatingActionButtonWidget(),
       ),
     );
   }
