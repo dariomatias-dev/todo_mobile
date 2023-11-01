@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_action_widget.dart';
-import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_form_widget/simple_dialog_form_widget.dart';
+import 'package:todo/src/screens/home_screen/components/task_creation_dialog_widget/task_creation_dialog_action_widget.dart';
+import 'package:todo/src/screens/home_screen/components/task_creation_dialog_widget/task_creation_dialog_form_widget/task_creation_dialog_form_widget.dart';
 import 'package:todo/src/screens/home_screen/models/form_data_model.dart';
 
-class SimpleDialogWidget extends StatefulWidget {
-  const SimpleDialogWidget({
+class TaskCreationDialogWidget extends StatefulWidget {
+  const TaskCreationDialogWidget({
     super.key,
     required this.alertDialogContext,
   });
@@ -13,10 +13,11 @@ class SimpleDialogWidget extends StatefulWidget {
   final BuildContext alertDialogContext;
 
   @override
-  State<SimpleDialogWidget> createState() => _SimpleDialogWidgetState();
+  State<TaskCreationDialogWidget> createState() =>
+      _TaskCreationDialogWidgetState();
 }
 
-class _SimpleDialogWidgetState extends State<SimpleDialogWidget> {
+class _TaskCreationDialogWidgetState extends State<TaskCreationDialogWidget> {
   final _formKey = GlobalKey<FormState>();
   final _titleFieldController = TextEditingController();
   final _descriptionFieldController = TextEditingController();
@@ -83,7 +84,7 @@ class _SimpleDialogWidgetState extends State<SimpleDialogWidget> {
           ),
         ),
         const SizedBox(height: 28.0),
-        SimpleDialogFormWidget(
+        TaskCreationDialogFormWidget(
           formKey: _formKey,
           titleFieldController: _titleFieldController,
           descriptionFieldController: _descriptionFieldController,
@@ -91,7 +92,7 @@ class _SimpleDialogWidgetState extends State<SimpleDialogWidget> {
         const SizedBox(height: 28.0),
         Row(
           children: [
-            SimpleDialogActionWidget(
+            TaskCreationDialogActionWidget(
               action: () {
                 final thereIsData = hasFormData();
 
@@ -104,7 +105,7 @@ class _SimpleDialogWidgetState extends State<SimpleDialogWidget> {
               color: Colors.blueGrey.shade800.withOpacity(0.6),
             ),
             const SizedBox(width: 8.0),
-            SimpleDialogActionWidget(
+            TaskCreationDialogActionWidget(
               action: () {
                 if (_formKey.currentState!.validate()) {
                   final data = getData();
