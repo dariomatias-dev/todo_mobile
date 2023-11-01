@@ -8,9 +8,9 @@ class FloatingActionButtonWidget extends StatelessWidget {
   void _showAlertDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (alertDialogContext) {
+      builder: (simpleDialogContext) {
         return TaskCreationDialogWidget(
-          alertDialogContext: alertDialogContext,
+          simpleDialogContext: simpleDialogContext,
         );
       },
     );

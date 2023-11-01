@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TaskCreationDialogActionWidget extends StatelessWidget {
-  const TaskCreationDialogActionWidget({
+class SimpleDialogActionWidget extends StatelessWidget {
+  const SimpleDialogActionWidget({
     super.key,
     required this.action,
     required this.title,
