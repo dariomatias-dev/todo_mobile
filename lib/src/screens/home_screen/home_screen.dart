@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:todo/src/screens/home_screen/components/floating_action_button_widget.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -14,6 +16,7 @@ class HomeScreen extends StatelessWidget {
       body: const Center(
         child: Text('Development'),
       ),
+      floatingActionButton: const FloatingActionButtonWidget(),
     );
   }
 }
