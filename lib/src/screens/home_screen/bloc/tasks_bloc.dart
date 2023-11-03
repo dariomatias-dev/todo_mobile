@@ -2,18 +2,20 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
+
+import 'package:todo/src/repositories/task_repository.dart';
+
 import 'package:todo/src/screens/home_screen/models/form_data_model.dart';
 import 'package:todo/src/screens/home_screen/models/task_model.dart';
-import 'package:todo/src/services/database_client_service.dart';
 
 part 'tasks_event.dart';
 part 'tasks_state.dart';
 
 class TasksBloc extends Bloc<TasksEvent, TasksState> {
-  final DatabaseClientService databaseService;
+  final TaskRepository taskRepository;
 
   TasksBloc({
-    required this.databaseService,
+    required this.taskRepository,
   }) : super(const TasksInitial()) {
     on<TasksLoadingEvent>(_onTasksLoadingEvent);
     on<TaskCreateEvent>(_onTaskCreateEvent);
@@ -23,23 +25,23 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     TasksLoadingEvent event,
     Emitter<TasksState> emit,
   ) async {
-    emit(const TasksLoadingState());
+    // emit(const TasksLoadingState());
 
-    final result = await databaseService.getAll();
-    final tasks = result.map((data) {
-      return TaskModel.fromMap(data);
-    }).toList();
+    // final result = await taskRepository.getAll();
+    // final tasks = (result as List<dynamic>).map((data) {
+    //   return TaskModel.fromMap(data);
+    // }).toList();
 
-    emit(TasksLoadedState(
-      tasks: tasks,
-    ));
+    // emit(TasksLoadedState(
+    //   tasks: tasks,
+    // ));
   }
 
   FutureOr<void> _onTaskCreateEvent(
     TaskCreateEvent event,
     Emitter<TasksState> emit,
   ) async {
-    await databaseService.create(event.data);
+    await taskRepository.create(event.data);
 
     await _onTasksLoadingEvent(
       const TasksLoadingEvent(),
