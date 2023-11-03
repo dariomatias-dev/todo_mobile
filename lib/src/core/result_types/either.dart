@@ -1,6 +1,22 @@
 import "package:equatable/equatable.dart";
 
 enum FailureType {
+  fileSystem,
+  platform,
+  format,
+  socket,
+  unsupported,
+
+  /// Local database failures
+  openFailed,
+  tableNotFound,
+  syntaxError,
+  readOnly,
+  uniqueField,
+  notNull,
+  databaseClosed,
+
+  /// Generic Failure
   generic,
 }
 
