@@ -7,7 +7,9 @@ abstract class TasksEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class TasksLoadingEvent extends TasksEvent {}
+class TasksLoadingEvent extends TasksEvent {
+  const TasksLoadingEvent();
+}
 
 class TaskCreateEvent extends TasksEvent {
   const TaskCreateEvent({

@@ -50,7 +50,7 @@ class DatabaseClientService {
         'id': id,
         'title': data.title,
         'description': data.description,
-        'isDone': 0,
+        'is_done': 0,
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );

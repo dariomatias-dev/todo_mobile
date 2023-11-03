@@ -12,11 +12,13 @@ class TaskModel {
   final bool isDone;
 
   factory TaskModel.fromMap(Map<String, dynamic> map) {
+    final isDoneValue = map['is_done'];
+
     return TaskModel(
       id: map['id'],
       title: map['title'],
       description: map['description'],
-      isDone: map['is_done'],
+      isDone: isDoneValue == 1 ? true : false,
     );
   }
 
