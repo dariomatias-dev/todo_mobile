@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
 
+import 'package:todo/src/core/result_types/either.dart';
+
 import 'package:todo/src/repositories/task_repository.dart';
 
 import 'package:todo/src/screens/home_screen/models/form_data_model.dart';
@@ -25,16 +27,19 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     TasksLoadingEvent event,
     Emitter<TasksState> emit,
   ) async {
-    // emit(const TasksLoadingState());
+    emit(
+      const TasksLoadingState(),
+    );
 
-    // final result = await taskRepository.getAll();
-    // final tasks = (result as List<dynamic>).map((data) {
-    //   return TaskModel.fromMap(data);
-    // }).toList();
+    final result = await taskRepository.getAll();
 
-    // emit(TasksLoadedState(
-    //   tasks: tasks,
-    // ));
+    if (result is Success) {
+      emit(
+        TasksLoadedState(
+          tasks: result.value,
+        ),
+      );
+    }
   }
 
   FutureOr<void> _onTaskCreateEvent(

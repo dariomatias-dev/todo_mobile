@@ -26,7 +26,9 @@ class HomeScreen extends StatelessWidget {
           BlocProvider(
             create: (context) => TasksBloc(
               taskRepository: context.read<TaskRepository>(),
-            ),
+            )..add(
+                const TasksLoadingEvent(),
+              ),
           ),
         ],
         child: Scaffold(

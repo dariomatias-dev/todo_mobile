@@ -9,22 +9,22 @@ import 'package:uuid/uuid.dart';
 
 import 'package:todo/src/core/result_types/either.dart';
 
-import 'package:todo/src/screens/home_screen/models/form_data_model.dart';
-
 class DatabaseClientService {
-  final Logger logger = Logger();
+  DatabaseClientService({
+    required this.table,
+    required this.columns,
+    required this.createTableQuery,
+  });
+
+  final Logger _logger = Logger();
+  late Database _db;
 
   static const _databaseName = "todo.db";
   static const _databaseVersion = 1;
 
-  static const table = 'task';
-
-  static const columnId = 'id';
-  static const columnTitle = 'title';
-  static const columnDescription = 'description';
-  static const columnIsDone = 'is_done';
-
-  late Database _db;
+  final String table;
+  final List<String> columns;
+  final String createTableQuery;
 
   Future<Either> init() async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
@@ -47,18 +47,11 @@ class DatabaseClientService {
 
   Future<Either> _onCreate(Database db, int _) async {
     return await _handleRequest(
-      () => db.execute('''
-      CREATE TABLE $table (
-        $columnId TEXT PRIMARY KEY,
-        $columnTitle TEXT NOT NULL,
-        $columnDescription TEXT NOT NULL,
-        $columnIsDone INTEGER NOT NULL
-      )
-    '''),
+      () => db.execute(createTableQuery),
     );
   }
 
-  Future<Either> create(FormDataModel data) async {
+  Future<Either> create(Map<String, dynamic> data) async {
     const uuid = Uuid();
     final id = uuid.v4();
 
@@ -67,9 +60,7 @@ class DatabaseClientService {
         table,
         {
           'id': id,
-          'title': data.title,
-          'description': data.description,
-          'is_done': 0,
+          ...data
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       ),
@@ -98,24 +89,22 @@ class DatabaseClientService {
     return result;
   }
 
-  Future<Either> update(Map<String, dynamic> row) async {
-    final String id = row[columnId];
-
+  Future<Either> update(String id, Map<String, dynamic> row) async {
     return _handleRequest(
       () => _db.update(
         table,
         row,
-        where: '$columnId = ?',
+        where: 'id = ?',
         whereArgs: [id],
       ),
     );
   }
 
-  Future<Either> delete(int id) async {
+  Future<Either> delete(String id) async {
     return await _handleRequest(
       () => _db.delete(
         table,
-        where: '$columnId = ?',
+        where: 'id = ?',
         whereArgs: [id],
       ),
     );
@@ -133,7 +122,7 @@ class DatabaseClientService {
         value: value,
       );
     } on Exception catch (err, stackTrace) {
-      logger.e(
+      _logger.e(
         err,
         stackTrace: stackTrace,
       );
