@@ -71,10 +71,10 @@ class TaskRepository {
     return await _databaseClientService.getCount();
   }
 
-  Future<Either> update(String id, Map<String, dynamic> row) async {
+  Future<Either> update(String id, Map<String, dynamic> data) async {
     return await _databaseClientService.update(
       id,
-      row,
+      data,
     );
   }
 

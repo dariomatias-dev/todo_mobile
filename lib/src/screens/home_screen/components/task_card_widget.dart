@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
+import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
 
 import 'package:todo/src/screens/home_screen/models/task_model.dart';
 
@@ -77,6 +79,46 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
                   ),
                 ),
               ],
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: PopupMenuButton(
+                  color: Colors.black,
+                  icon: const Icon(
+                    Icons.more_vert,
+                    color: Colors.white,
+                  ),
+                  itemBuilder: (context) => <PopupMenuItem>[
+                    PopupMenuItem(
+                      onTap: () {
+                        //context.read<TasksBloc>();
+                      },
+                      child: const Text(
+                        'Atualizar',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      onTap: () {
+                        context.read<TasksBloc>().add(
+                              TasksDeleteEvent(
+                                taskId: task.id,
+                              ),
+                            );
+                      },
+                      child: const Text(
+                        'Excluir',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

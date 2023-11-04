@@ -70,12 +70,12 @@ class HomeScreen extends StatelessWidget {
                     child: ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 20,
+                      itemCount: tasks.length,
                       separatorBuilder: (context, index) {
                         return const SizedBox(height: 6.0);
                       },
                       itemBuilder: (context, index) {
-                        final task = tasks[0];
+                        final task = tasks[index];
 
                         return TaskCardWidget(
                           task: task,
