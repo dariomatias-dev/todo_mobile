@@ -23,7 +23,7 @@ class UpdateTaskModel {
     return {
       'title': title,
       'description': description,
-      'is_done': isDone,
+      'is_done': isDone ? 1 : 0,
     };
   }
 }

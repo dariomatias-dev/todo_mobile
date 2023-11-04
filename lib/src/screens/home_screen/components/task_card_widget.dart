@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
+
 import 'package:todo/src/core/enums/enums.dart';
+
+import 'package:todo/src/repositories/task_repository.dart';
+
 import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
+
 import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_widget.dart';
 import 'package:todo/src/screens/home_screen/components/task_form_dialog/task_form_dialog.dart';
 
 import 'package:todo/src/screens/home_screen/models/task_model.dart';
+import 'package:todo/src/screens/home_screen/models/update_task_model.dart';
 
 class TaskCardWidget extends StatefulWidget {
   const TaskCardWidget({
     super.key,
+    required this.taskRepository,
     required this.task,
   });
 
+  final TaskRepository taskRepository;
   final TaskModel task;
 
   @override
@@ -27,6 +35,21 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
     setState(() {
       _checked = !_checked;
     });
+
+    _taskUpdate();
+  }
+
+  Future<void> _taskUpdate() async {
+    final data = UpdateTaskModel(
+      title: widget.task.title,
+      description: widget.task.description,
+      isDone: _checked,
+    );
+
+    await widget.taskRepository.update(
+      widget.task.id,
+      data.toMap(),
+    );
   }
 
   void _showConfirmTaskDeletion() {
@@ -94,6 +117,8 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
   @override
   Widget build(BuildContext context) {
     final task = widget.task;
+    final number0fCharacters =
+        (MediaQuery.sizeOf(context).width * 0.104).toInt();
 
     return InkWell(
       onTap: _handleChange,
@@ -120,6 +145,7 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
             ),
             const SizedBox(width: 16.0),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   task.title,
@@ -131,7 +157,7 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
                 ),
                 const SizedBox(height: 4.0),
                 Text(
-                  task.description,
+                  '${task.description.substring(0, number0fCharacters)}...',
                   style: TextStyle(
                     color: _checked ? Colors.grey.shade600 : Colors.white,
                   ),

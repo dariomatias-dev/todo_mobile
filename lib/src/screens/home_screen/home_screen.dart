@@ -78,6 +78,7 @@ class HomeScreen extends StatelessWidget {
                         final task = tasks[index];
 
                         return TaskCardWidget(
+                          taskRepository: taskRepository,
                           task: task,
                         );
                       },
