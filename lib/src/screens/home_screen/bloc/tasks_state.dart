@@ -25,3 +25,14 @@ class TasksLoadedState extends TasksState {
   @override
   List<Object?> get props => [tasks];
 }
+
+class TasksErrorState extends TasksState {
+  const TasksErrorState({
+    required this.failure,
+  });
+
+  final Failure failure;
+
+  @override
+  List<Object?> get props => [failure];
+}

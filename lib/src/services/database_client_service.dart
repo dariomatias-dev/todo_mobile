@@ -129,11 +129,6 @@ class DatabaseClientService {
             type: FailureType.generic,
             message: 'Table not found',
           );
-        } else if (err.isSyntaxError()) {
-          return const Failure(
-            type: FailureType.generic,
-            message: 'SQL syntax error.',
-          );
         } else if (err.isReadOnlyError()) {
           return const Failure(
             type: FailureType.readOnly,

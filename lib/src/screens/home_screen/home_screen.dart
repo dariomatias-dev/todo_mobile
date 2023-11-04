@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/src/core/result_types/either.dart';
 
 import 'package:todo/src/providers/app_data_provider.dart';
 
@@ -27,6 +28,46 @@ class HomeScreen extends StatelessWidget {
           action1: (closeSimpleDialog) {
             closeSimpleDialog();
           },
+        );
+      },
+    );
+  }
+
+  void _handleError(BuildContext context, Failure failure) {
+    const defaultMessage =
+        '\nPor favor, tente novamente ou volte mais tarde.\nCaso persista informe os desenvolvedores.';
+
+    String title = 'Erro';
+    String content = 'Ocorreu um problema ao carregar os dados.$defaultMessage';
+    String actionTitle1 = 'Fechar';
+    String? actionTitle2;
+
+    void action1(closeSimpleDialog) {
+      closeSimpleDialog();
+    }
+
+    void action2(closeSimpleDialog) {
+      closeSimpleDialog();
+    }
+
+    if (failure.type == FailureType.databaseClosed) {
+      content = 'O banco de dados fechou inesperadamente.$defaultMessage';
+    } else if (failure.type == FailureType.platform) {
+      content =
+          'O seu dispositivo é incompatível com o sistema de armazenamento utilizado.';
+    }
+
+    showDialog(
+      context: context,
+      builder: (simpleDialogContext) {
+        return SimpleDialogWidget(
+          simpleDialogContext: simpleDialogContext,
+          title: title,
+          content: content,
+          actionTitle1: actionTitle1,
+          actionTitle2: actionTitle2,
+          action1: action1,
+          action2: action2,
         );
       },
     );
@@ -111,6 +152,23 @@ class HomeScreen extends StatelessWidget {
                           task: task,
                         );
                       },
+                    ),
+                  ),
+                );
+              } else if (state is TasksErrorState) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _handleError(
+                    context,
+                    state.failure,
+                  );
+                });
+
+                return const Center(
+                  child: Text(
+                    'Não foi possível carregar os dados',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 );

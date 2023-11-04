@@ -42,6 +42,12 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
           tasks: result.value,
         ),
       );
+    } else if (result is Failure) {
+      emit(
+        TasksErrorState(
+          failure: result,
+        ),
+      );
     }
   }
 
