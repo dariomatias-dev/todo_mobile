@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
+import 'package:todo/src/core/enums/enums.dart';
 import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
 import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_widget.dart';
+import 'package:todo/src/screens/home_screen/components/task_form_dialog/task_form_dialog.dart';
 
 import 'package:todo/src/screens/home_screen/models/task_model.dart';
 
@@ -60,6 +62,23 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
           actionTitle2: actionTitle2,
           action1: action1,
           action2: action2,
+        );
+      },
+    );
+  }
+
+  void _showTaskFormDialog() {
+    final tasksBloc = context.read<TasksBloc>();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (simpleDialogContext) {
+        return TaskFormDialog(
+          formType: TaskFormType.update,
+          taskId: widget.task.id,
+          tasksBloc: tasksBloc,
+          simpleDialogContext: simpleDialogContext,
         );
       },
     );
@@ -130,9 +149,7 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
                   ),
                   itemBuilder: (context) => <PopupMenuItem>[
                     PopupMenuItem(
-                      onTap: () {
-                        //context.read<TasksBloc>();
-                      },
+                      onTap: _showTaskFormDialog,
                       child: const Text(
                         'Atualizar',
                         style: TextStyle(

@@ -58,10 +58,7 @@ class DatabaseClientService {
     return await _handleRequest(
       () => _db.insert(
         table,
-        {
-          'id': id,
-          ...data
-        },
+        {'id': id, ...data},
         conflictAlgorithm: ConflictAlgorithm.replace,
       ),
     );
@@ -73,20 +70,14 @@ class DatabaseClientService {
     );
   }
 
-  Future<Either> getCount() async {
-    final Either result = await _handleRequest(
-      () => _db.rawQuery('SELECT COUNT(*) FROM $table'),
+  Future<Either> getOne(String id) async {
+    return await _handleRequest(
+      () => _db.query(
+        table,
+        where: 'id = ?',
+        whereArgs: [id],
+      ),
     );
-
-    if (result is Success) {
-      final value = Sqflite.firstIntValue(result.value) ?? 0;
-
-      return Success(
-        value: value,
-      );
-    }
-
-    return result;
   }
 
   Future<Either> update(String id, Map<String, dynamic> row) async {

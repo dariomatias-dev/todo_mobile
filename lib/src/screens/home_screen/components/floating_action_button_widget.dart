@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:todo/src/core/enums/enums.dart';
+
 import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
 
-import 'package:todo/src/screens/home_screen/components/task_creation_dialog_widget/task_creation_dialog_widget.dart';
+import 'package:todo/src/screens/home_screen/components/task_form_dialog/task_form_dialog.dart';
 
 class FloatingActionButtonWidget extends StatelessWidget {
   const FloatingActionButtonWidget({super.key});
@@ -16,7 +18,8 @@ class FloatingActionButtonWidget extends StatelessWidget {
       builder: (simpleDialogContext) {
         final tasksBloc = context.read<TasksBloc>();
 
-        return TaskCreationDialogWidget(
+        return TaskFormDialog(
+          formType: TaskFormType.creation,
           tasksBloc: tasksBloc,
           simpleDialogContext: simpleDialogContext,
         );

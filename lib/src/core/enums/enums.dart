@@ -1,0 +1,4 @@
+enum TaskFormType {
+  creation,
+  update,
+}

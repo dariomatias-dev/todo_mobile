@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:todo/src/screens/home_screen/components/task_creation_dialog_widget/task_creation_dialog_form_widget/text_form_field_widget.dart';
+import 'package:todo/src/screens/home_screen/components/task_form_dialog/task_form_widget/text_form_field_widget.dart';
 
-class TaskCreationDialogFormWidget extends StatefulWidget {
-  const TaskCreationDialogFormWidget({
+class TaskFormWidget extends StatefulWidget {
+  const TaskFormWidget({
     super.key,
     required this.formKey,
     required this.titleFieldController,
@@ -15,12 +15,12 @@ class TaskCreationDialogFormWidget extends StatefulWidget {
   final TextEditingController descriptionFieldController;
 
   @override
-  State<TaskCreationDialogFormWidget> createState() =>
+  State<TaskFormWidget> createState() =>
       TtasCcreatioDdialoFforWwidgetState();
 }
 
 class TtasCcreatioDdialoFforWwidgetState
-    extends State<TaskCreationDialogFormWidget> {
+    extends State<TaskFormWidget> {
   @override
   Widget build(BuildContext context) {
     return Form(

@@ -67,8 +67,17 @@ class TaskRepository {
     return result;
   }
 
-  Future<Either> getCount() async {
-    return await _databaseClientService.getCount();
+  Future<Either> getOne(String id) async {
+    final result = await _databaseClientService.getOne(id);
+    if (result is Success) {
+      final task = TaskModel.fromMap(result.value[0]);
+
+      return Success(
+        value: task,
+      );
+    }
+
+    return result;
   }
 
   Future<Either> update(String id, Map<String, dynamic> data) async {
