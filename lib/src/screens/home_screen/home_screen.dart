@@ -6,11 +6,31 @@ import 'package:todo/src/providers/app_data_provider.dart';
 import 'package:todo/src/repositories/task_repository.dart';
 
 import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
+
 import 'package:todo/src/screens/home_screen/components/floating_action_button_widget.dart';
+import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_widget.dart';
 import 'package:todo/src/screens/home_screen/components/task_card_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (simpleDialogContext) {
+        return SimpleDialogWidget(
+          simpleDialogContext: simpleDialogContext,
+          title: 'Informação',
+          content:
+              'Esse projeto foi criado com o objetivo de colocar em prática os meus conhecimentos adquidos com os estudos iniciais de BLoC, Repository Pattern e tratamento de erros.',
+          actionTitle1: 'Fechar',
+          action1: (closeSimpleDialog) {
+            closeSimpleDialog();
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +57,14 @@ class HomeScreen extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.black,
             title: const Text('Lista de Tarefas'),
+            actions: [
+              IconButton(
+                onPressed: () => _showInfoDialog(context),
+                icon: const Icon(
+                  Icons.info_outline,
+                ),
+              ),
+            ],
           ),
           body: BlocBuilder<TasksBloc, TasksState>(
             builder: (context, state) {

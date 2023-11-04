@@ -10,9 +10,9 @@ class SimpleDialogWidget extends StatelessWidget {
     this.content,
     this.body,
     required this.actionTitle1,
-    required this.actionTitle2,
-    required this.action1,
-    required this.action2,
+    this.actionTitle2,
+    this.action1,
+    this.action2,
   })  : assert(
           (content == null && body == null) == false,
           'The "content" or "body" must be filled in.',
@@ -27,7 +27,7 @@ class SimpleDialogWidget extends StatelessWidget {
   final String? content;
   final Widget? body;
   final String actionTitle1;
-  final String actionTitle2;
+  final String? actionTitle2;
   final void Function(VoidCallback closeSimpleDialog)? action1;
   final void Function(VoidCallback closeSimpleDialog)? action2;
 
@@ -87,6 +87,7 @@ class SimpleDialogWidget extends StatelessWidget {
         if (body != null) body!,
         const SizedBox(height: 28.0),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             SimpleDialogActionWidget(
               action: () {
@@ -97,16 +98,18 @@ class SimpleDialogWidget extends StatelessWidget {
               title: actionTitle1,
               color: Colors.blueGrey.shade800.withOpacity(0.6),
             ),
-            const SizedBox(width: 8.0),
-            SimpleDialogActionWidget(
-              action: () {
-                action2 != null
-                    ? action2!(_closeSimpleDialog)
-                    : _closeSimpleDialog();
-              },
-              title: actionTitle2,
-              color: Colors.blue.shade700,
-            ),
+            if (actionTitle2 != null) ...[
+              const SizedBox(width: 8.0),
+              SimpleDialogActionWidget(
+                action: () {
+                  action2 != null
+                      ? action2!(_closeSimpleDialog)
+                      : _closeSimpleDialog();
+                },
+                title: actionTitle2!,
+                color: Colors.blue.shade700,
+              ),
+            ],
           ],
         ),
         const SizedBox(height: 32.0),
