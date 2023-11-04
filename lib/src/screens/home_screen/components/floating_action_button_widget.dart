@@ -26,11 +26,43 @@ class FloatingActionButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton.extended(
-      onPressed: () => _showTaskCreationDialog(context),
-      icon: const Icon(Icons.add),
-      label: const Text('Adicionar'),
-      backgroundColor: Colors.black,
+    return InkWell(
+      onTap: () => _showTaskCreationDialog(context),
+      child: Container(
+        width: 164.0,
+        padding: const EdgeInsets.symmetric(
+          vertical: 14.0,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          border: Border.all(
+            width: 1.0,
+            color: Colors.blue.shade900,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(40.0),
+          ),
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 32.0,
+            ),
+            SizedBox(width: 8.0),
+            Text(
+              'Adicionar',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
