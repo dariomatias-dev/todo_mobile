@@ -11,7 +11,7 @@ import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
 import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_widget.dart';
 import 'package:todo/src/screens/home_screen/components/task_form_dialog/task_form_widget/task_form_widget.dart';
 
-import 'package:todo/src/screens/home_screen/models/form_data_model.dart';
+import 'package:todo/src/screens/home_screen/models/create_task_model.dart';
 import 'package:todo/src/screens/home_screen/models/task_model.dart';
 import 'package:todo/src/screens/home_screen/models/update_task_model.dart';
 
@@ -48,11 +48,11 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
     return formData.title.isNotEmpty || formData.description.isNotEmpty;
   }
 
-  FormDataModel _getData() {
+  CreateTaskModel _getData() {
     final title = _titleFieldController.text;
     final description = _descriptionFieldController.text;
 
-    return FormDataModel(
+    return CreateTaskModel(
       title: title,
       description: description,
     );

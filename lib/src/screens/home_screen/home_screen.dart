@@ -51,6 +51,7 @@ class HomeScreen extends StatelessWidget {
                   return const Center(
                     child: Text(
                       'A lista está vazia.\nComece criando uma tarefa!',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w600,

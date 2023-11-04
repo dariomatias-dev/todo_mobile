@@ -16,7 +16,7 @@ class TaskCreateEvent extends TasksEvent {
     required this.data,
   });
 
-  final FormDataModel data;
+  final CreateTaskModel data;
 
   @override
   List<Object?> get props => [data];

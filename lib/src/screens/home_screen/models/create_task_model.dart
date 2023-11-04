@@ -1,5 +1,5 @@
-class FormDataModel {
-  const FormDataModel({
+class CreateTaskModel {
+  const CreateTaskModel({
     required this.title,
     required this.description,
   });
@@ -7,8 +7,8 @@ class FormDataModel {
   final String title;
   final String description;
 
-  factory FormDataModel.fromMap(Map<String, dynamic> map) {
-    return FormDataModel(
+  factory CreateTaskModel.fromMap(Map<String, dynamic> map) {
+    return CreateTaskModel(
       title: map['title'],
       description: map['description'],
     );

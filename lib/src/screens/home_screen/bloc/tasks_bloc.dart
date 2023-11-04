@@ -7,7 +7,7 @@ import 'package:todo/src/core/result_types/either.dart';
 
 import 'package:todo/src/repositories/task_repository.dart';
 
-import 'package:todo/src/screens/home_screen/models/form_data_model.dart';
+import 'package:todo/src/screens/home_screen/models/create_task_model.dart';
 import 'package:todo/src/screens/home_screen/models/task_model.dart';
 import 'package:todo/src/screens/home_screen/models/update_task_model.dart';
 

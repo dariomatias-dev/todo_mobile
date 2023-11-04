@@ -157,7 +157,9 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
                 ),
                 const SizedBox(height: 4.0),
                 Text(
-                  '${task.description.substring(0, number0fCharacters)}...',
+                  task.description.length > number0fCharacters
+                      ? '${task.description.substring(0, number0fCharacters)}...'
+                      : task.description,
                   style: TextStyle(
                     color: _checked ? Colors.grey.shade600 : Colors.white,
                   ),

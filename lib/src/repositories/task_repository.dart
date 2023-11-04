@@ -1,6 +1,6 @@
 import 'package:todo/src/core/result_types/either.dart';
 
-import 'package:todo/src/screens/home_screen/models/form_data_model.dart';
+import 'package:todo/src/screens/home_screen/models/create_task_model.dart';
 import 'package:todo/src/screens/home_screen/models/task_model.dart';
 
 import 'package:todo/src/services/database_client_service.dart';
@@ -41,7 +41,7 @@ class TaskRepository {
     await _databaseClientService.init();
   }
 
-  Future<Either> create(FormDataModel data) async {
+  Future<Either> create(CreateTaskModel data) async {
     final task = {
       'title': data.title,
       'description': data.description,
