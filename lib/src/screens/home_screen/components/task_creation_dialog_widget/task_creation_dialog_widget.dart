@@ -56,7 +56,6 @@ class _TaskCreationDialogWidgetState extends State<TaskCreationDialogWidget> {
   ) {
     showDialog(
       context: context,
-      barrierDismissible: false,
       barrierColor: Colors.blue.withOpacity(0.2),
       builder: (simpleDialogContext) {
         return SimpleDialogWidget(

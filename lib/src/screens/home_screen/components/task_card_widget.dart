@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
+import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_widget.dart';
 
 import 'package:todo/src/screens/home_screen/models/task_model.dart';
 
@@ -24,6 +25,44 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
     setState(() {
       _checked = !_checked;
     });
+  }
+
+  void _showConfirmTaskDeletion() {
+    const title = 'Confirmar';
+    const content =
+        'Se excluir a tarefa não será possível recuperá-la.\nDeseja excluí-la mesmo assim?';
+    const actionTitle1 = 'Não';
+    const actionTitle2 = 'Sim';
+
+    void action1(VoidCallback closeSimpleDialog) {
+      closeSimpleDialog();
+    }
+
+    void action2(VoidCallback closeSimpleDialog) {
+      closeSimpleDialog();
+
+      context.read<TasksBloc>().add(
+            TasksDeleteEvent(
+              taskId: widget.task.id,
+            ),
+          );
+    }
+
+    showDialog(
+      context: context,
+      barrierColor: Colors.blue.withOpacity(0.2),
+      builder: (simpleDialogContext) {
+        return SimpleDialogWidget(
+          simpleDialogContext: simpleDialogContext,
+          title: title,
+          content: content,
+          actionTitle1: actionTitle1,
+          actionTitle2: actionTitle2,
+          action1: action1,
+          action2: action2,
+        );
+      },
+    );
   }
 
   @override
@@ -102,13 +141,7 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
                       ),
                     ),
                     PopupMenuItem(
-                      onTap: () {
-                        context.read<TasksBloc>().add(
-                              TasksDeleteEvent(
-                                taskId: task.id,
-                              ),
-                            );
-                      },
+                      onTap: _showConfirmTaskDeletion,
                       child: const Text(
                         'Excluir',
                         style: TextStyle(
