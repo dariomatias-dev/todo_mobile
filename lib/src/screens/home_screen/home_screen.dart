@@ -7,6 +7,7 @@ import 'package:todo/src/repositories/task_repository.dart';
 
 import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
 import 'package:todo/src/screens/home_screen/components/floating_action_button_widget.dart';
+import 'package:todo/src/screens/home_screen/components/task_card_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -58,18 +59,30 @@ class HomeScreen extends StatelessWidget {
                   );
                 }
 
-                return ListView.builder(
-                  itemCount: tasks.length,
-                  itemBuilder: (context, index) {
-                    final task = tasks[index];
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 16.0,
+                      right: 14.0,
+                      bottom: 88.0,
+                      left: 14.0,
+                    ),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 20,
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(height: 6.0);
+                      },
+                      itemBuilder: (context, index) {
+                        final task = tasks[0];
 
-                    return CheckboxListTile(
-                      title: Text(task.title),
-                      subtitle: Text(task.description),
-                      value: task.isDone,
-                      onChanged: null,
-                    );
-                  },
+                        return TaskCardWidget(
+                          task: task,
+                        );
+                      },
+                    ),
+                  ),
                 );
               }
 
