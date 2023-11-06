@@ -75,16 +75,16 @@ class SimpleDialogWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 28.0),
-        if (content != null)
-          Text(
-            content!,
-            textAlign: TextAlign.justify,
-            style: TextStyle(
-              color: Colors.blueGrey.shade200,
-              fontSize: 14.0,
-            ),
-          ),
-        if (body != null) body!,
+        content != null
+            ? Text(
+                content!,
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  color: Colors.blueGrey.shade200,
+                  fontSize: 14.0,
+                ),
+              )
+            : body!,
         const SizedBox(height: 28.0),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,

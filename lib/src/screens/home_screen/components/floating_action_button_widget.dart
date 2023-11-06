@@ -31,6 +31,9 @@ class FloatingActionButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => _showTaskCreationDialog(context),
+      customBorder: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(40.0),
+      ),
       child: Container(
         width: 164.0,
         padding: const EdgeInsets.symmetric(
