@@ -7,8 +7,6 @@ import 'package:todo/src/core/enums/enums.dart';
 
 import 'package:todo/src/providers/app_data_provider.dart';
 
-import 'package:todo/src/repositories/task_repository.dart';
-
 import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
 
 import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_widget.dart';
@@ -42,7 +40,6 @@ class TaskFormDialog extends StatefulWidget {
 }
 
 class _TaskFormDialogState extends State<TaskFormDialog> {
-  final taskRepository = TaskRepository();
   final _tapRecognizer = TapGestureRecognizer();
 
   final _formKey = GlobalKey<FormState>();
@@ -75,7 +72,7 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
   }
 
   void _showConfirmDiscardDialog(
-    VoidCallback closeSimpleDialog,
+    VoidCallback closeFormDialog,
   ) {
     showDialog(
       context: context,
@@ -89,8 +86,8 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
           actionTitle1: 'Não',
           actionTitle2: 'SIm',
           action1: null,
-          action2: (closeSimpleDialog) {
-            closeSimpleDialog();
+          action2: (closeFormDialog) {
+            closeFormDialog();
 
             Navigator.pop(simpleDialogContext);
           },
@@ -116,32 +113,55 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
     _descriptionFieldController.text = task!.description;
   }
 
-  Future<Either> _sendTask(CreateTaskModel data) async {
-    late Either result;
+  Future<void> _sendTask(
+    VoidCallback closeFormDialog,
+  ) async {
+    if (_formKey.currentState!.validate()) {
+      final taskRepository = AppDataProvider.of(context)!.taskRepository;
 
-    if (widget.formType == TaskFormType.creation) {
-      result = await taskRepository.create(data);
-    } else {
-      final updatedTask = UpdateTaskModel(
-        title: data.title,
-        description: data.description,
-        isDone: task!.isDone,
-      );
+      late Either result;
+      final data = _getData();
 
-      result = await taskRepository.update(
-        task!.id,
-        updatedTask.toMap(),
-      );
+      if (widget.formType == TaskFormType.creation) {
+        result = await taskRepository.create(data);
+      } else {
+        final updatedTask = UpdateTaskModel(
+          title: data.title,
+          description: data.description,
+          isDone: task!.isDone,
+        );
+
+        result = await taskRepository.update(
+          task!.id,
+          updatedTask.toMap(),
+        );
+      }
+
+      if (result is Success) {
+        closeFormDialog();
+
+        widget.tasksBloc.add(
+          const TasksLoadingEvent(),
+        );
+      } else {
+        _showTaskErrorDialog(
+          (result as Failure),
+          closeFormDialog,
+        );
+      }
     }
-
-    return result;
   }
 
-  void _showTaskErrorDialog(Failure failure) {
+  void _showTaskErrorDialog(
+    Failure failure,
+    VoidCallback closeFormDialog,
+  ) {
     const actionTitle2 = 'Tentar novamente';
 
-    void action2(void Function() closeSimpleDialog) {
+    void action2(VoidCallback closeSimpleDialog) {
       closeSimpleDialog();
+
+      _sendTask(closeFormDialog);
     }
 
     handleErrorUtil(
@@ -196,31 +216,19 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
       actionTitle1: 'Fechar',
       actionTitle2:
           widget.formType == TaskFormType.creation ? 'Adicionar' : 'Atualizar',
-      action1: (VoidCallback closeSimpleDialog) {
+      action1: (VoidCallback closeFormDialog) {
         final thereIsData = _hasFormData();
 
         if (thereIsData) {
-          _showConfirmDiscardDialog(closeSimpleDialog);
+          _showConfirmDiscardDialog(closeFormDialog);
         } else {
-          closeSimpleDialog();
+          closeFormDialog();
         }
       },
-      action2: (closeSimpleDialog) async {
-        if (_formKey.currentState!.validate()) {
-          final data = _getData();
+      action2: (closeFormDialog) async {
+        FocusScope.of(context).unfocus();
 
-          final result = await _sendTask(data);
-
-          if (result is Success) {
-            closeSimpleDialog();
-
-            widget.tasksBloc.add(
-              const TasksLoadingEvent(),
-            );
-          } else {
-            _showTaskErrorDialog((result as Failure));
-          }
-        }
+        _sendTask(closeFormDialog);
       },
     );
   }
