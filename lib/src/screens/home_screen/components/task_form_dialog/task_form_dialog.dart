@@ -50,7 +50,12 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
   bool _hasFormData() {
     final formData = _getData();
 
-    return formData.title.isNotEmpty || formData.description.isNotEmpty;
+    if (widget.formType == TaskFormType.creation) {
+      return formData.title.isNotEmpty || formData.description.isNotEmpty;
+    } else {
+      return formData.title != task!.title ||
+          formData.description != task!.description;
+    }
   }
 
   CreateTaskModel _getData() {
@@ -105,7 +110,16 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
       task = result.value;
 
       _fillFields();
-    } else {}
+    } else {
+      _showErrorDialog(
+        (result as Failure),
+        () => _fetchData(),
+        action1: (closeSimpleDialog) {
+          closeSimpleDialog();
+          Navigator.pop(widget.simpleDialogContext);
+        },
+      );
+    }
   }
 
   void _fillFields() {
@@ -144,30 +158,34 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
           const TasksLoadingEvent(),
         );
       } else {
-        _showTaskErrorDialog(
+        _showErrorDialog(
           (result as Failure),
-          closeFormDialog,
+          () => _sendTask(closeFormDialog),
         );
       }
     }
   }
 
-  void _showTaskErrorDialog(
+  void _showErrorDialog(
     Failure failure,
-    VoidCallback closeFormDialog,
-  ) {
+    VoidCallback retryAction, {
+    void Function(
+      VoidCallback closeSimpleDialog,
+    )? action1,
+  }) {
     const actionTitle2 = 'Tentar novamente';
 
     void action2(VoidCallback closeSimpleDialog) {
       closeSimpleDialog();
 
-      _sendTask(closeFormDialog);
+      retryAction();
     }
 
     handleErrorUtil(
       context,
       _tapRecognizer,
       failure,
+      action1: action1,
       actionTitle2: actionTitle2,
       action2: action2,
     );

@@ -96,6 +96,7 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
     showDialog(
       context: context,
       barrierDismissible: false,
+      barrierColor: Colors.blue.withOpacity(0.2),
       builder: (simpleDialogContext) {
         return TaskFormDialog(
           formType: TaskFormType.update,
