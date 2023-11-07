@@ -255,4 +255,3 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
     );
   }
 }
-
