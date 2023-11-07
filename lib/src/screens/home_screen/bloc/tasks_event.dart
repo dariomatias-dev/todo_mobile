@@ -11,30 +11,6 @@ class TasksLoadingEvent extends TasksEvent {
   const TasksLoadingEvent();
 }
 
-class TaskCreateEvent extends TasksEvent {
-  const TaskCreateEvent({
-    required this.data,
-  });
-
-  final CreateTaskModel data;
-
-  @override
-  List<Object?> get props => [data];
-}
-
-class TasksUpdateEvent extends TasksEvent {
-  const TasksUpdateEvent({
-    required this.taskId,
-    required this.data,
-  });
-
-  final String taskId;
-  final UpdateTaskModel data;
-
-  @override
-  List<Object?> get props => [taskId, data];
-}
-
 class TasksDeleteEvent extends TasksEvent {
   const TasksDeleteEvent({
     required this.taskId,

@@ -13,7 +13,6 @@ import 'package:todo/src/screens/home_screen/components/task_form_dialog/task_fo
 
 import 'package:todo/src/screens/home_screen/models/create_task_model.dart';
 import 'package:todo/src/screens/home_screen/models/task_model.dart';
-import 'package:todo/src/screens/home_screen/models/update_task_model.dart';
 
 class TaskFormDialog extends StatefulWidget {
   const TaskFormDialog({
@@ -96,17 +95,22 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
 
     final result = await taskRepository.getOne(widget.taskId!);
 
-
     if (result is Success) {
       task = result.value;
 
       _fillFields();
-    }
+    } else {}
   }
 
   void _fillFields() {
     _titleFieldController.text = task!.title;
     _descriptionFieldController.text = task!.description;
+  }
+
+  Future<void> _sendTask(CreateTaskModel data) async {
+    if (widget.formType == TaskFormType.creation) {
+    } else {
+    }
   }
 
   @override
@@ -159,28 +163,11 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
           closeSimpleDialog();
         }
       },
-      action2: (closeSimpleDialog) {
+      action2: (closeSimpleDialog) async {
         if (_formKey.currentState!.validate()) {
           final data = _getData();
 
-          if (widget.formType == TaskFormType.creation) {
-            widget.tasksBloc.add(
-              TaskCreateEvent(
-                data: data,
-              ),
-            );
-          } else {
-            widget.tasksBloc.add(
-              TasksUpdateEvent(
-                taskId: widget.taskId!,
-                data: UpdateTaskModel(
-                  title: data.title,
-                  description: data.description,
-                  isDone: task!.isDone,
-                ),
-              ),
-            );
-          }
+          await _sendTask(data);
 
           closeSimpleDialog();
         }
