@@ -8,21 +8,18 @@ import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/sim
 void handleErrorUtil(
   BuildContext context,
   TapGestureRecognizer tapRecognizer,
-  Failure failure,
-) {
+  Failure failure, {
+  String? actionTitle2,
+  void Function(void Function() closeSimpleDialog)? action2,
+}) {
   bool showErrorHelp = true;
   RichText? errorHelpWidget;
 
   String title = 'Erro';
   String content = 'Ocorreu um problema ao carregar os dados.';
   String actionTitle1 = 'Fechar';
-  String? actionTitle2;
 
   void action1(closeSimpleDialog) {
-    closeSimpleDialog();
-  }
-
-  void action2(closeSimpleDialog) {
     closeSimpleDialog();
   }
 

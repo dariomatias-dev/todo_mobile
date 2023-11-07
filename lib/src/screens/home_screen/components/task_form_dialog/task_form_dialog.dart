@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:todo/src/core/result_types/either.dart';
@@ -6,6 +7,8 @@ import 'package:todo/src/core/enums/enums.dart';
 
 import 'package:todo/src/providers/app_data_provider.dart';
 
+import 'package:todo/src/repositories/task_repository.dart';
+
 import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
 
 import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_widget.dart';
@@ -13,6 +16,9 @@ import 'package:todo/src/screens/home_screen/components/task_form_dialog/task_fo
 
 import 'package:todo/src/screens/home_screen/models/create_task_model.dart';
 import 'package:todo/src/screens/home_screen/models/task_model.dart';
+import 'package:todo/src/screens/home_screen/models/update_task_model.dart';
+
+import 'package:todo/src/utils/handle_error_util.dart';
 
 class TaskFormDialog extends StatefulWidget {
   const TaskFormDialog({
@@ -36,6 +42,9 @@ class TaskFormDialog extends StatefulWidget {
 }
 
 class _TaskFormDialogState extends State<TaskFormDialog> {
+  final taskRepository = TaskRepository();
+  final _tapRecognizer = TapGestureRecognizer();
+
   final _formKey = GlobalKey<FormState>();
   final _titleFieldController = TextEditingController();
   final _descriptionFieldController = TextEditingController();
@@ -107,14 +116,47 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
     _descriptionFieldController.text = task!.description;
   }
 
-  Future<void> _sendTask(CreateTaskModel data) async {
+  Future<Either> _sendTask(CreateTaskModel data) async {
+    late Either result;
+
     if (widget.formType == TaskFormType.creation) {
+      result = await taskRepository.create(data);
     } else {
+      final updatedTask = UpdateTaskModel(
+        title: data.title,
+        description: data.description,
+        isDone: task!.isDone,
+      );
+
+      result = await taskRepository.update(
+        task!.id,
+        updatedTask.toMap(),
+      );
     }
+
+    return result;
+  }
+
+  void _showTaskErrorDialog(Failure failure) {
+    const actionTitle2 = 'Tentar novamente';
+
+    void action2(void Function() closeSimpleDialog) {
+      closeSimpleDialog();
+    }
+
+    handleErrorUtil(
+      context,
+      _tapRecognizer,
+      failure,
+      actionTitle2: actionTitle2,
+      action2: action2,
+    );
   }
 
   @override
   void dispose() {
+    _tapRecognizer.dispose();
+
     _titleFieldController.dispose();
     _descriptionFieldController.dispose();
 
@@ -167,9 +209,17 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
         if (_formKey.currentState!.validate()) {
           final data = _getData();
 
-          await _sendTask(data);
+          final result = await _sendTask(data);
 
-          closeSimpleDialog();
+          if (result is Success) {
+            closeSimpleDialog();
+
+            widget.tasksBloc.add(
+              const TasksLoadingEvent(),
+            );
+          } else {
+            _showTaskErrorDialog((result as Failure));
+          }
         }
       },
     );
