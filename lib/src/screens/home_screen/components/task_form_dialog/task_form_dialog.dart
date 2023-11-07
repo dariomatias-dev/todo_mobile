@@ -10,6 +10,7 @@ import 'package:todo/src/providers/app_data_provider.dart';
 import 'package:todo/src/screens/home_screen/bloc/tasks_bloc.dart';
 
 import 'package:todo/src/screens/home_screen/components/simple_dialog_widget/simple_dialog_widget.dart';
+import 'package:todo/src/screens/home_screen/components/task_form_dialog/center_content_widget.dart';
 import 'package:todo/src/screens/home_screen/components/task_form_dialog/task_form_widget/task_form_widget.dart';
 
 import 'package:todo/src/screens/home_screen/models/create_task_model.dart';
@@ -24,7 +25,7 @@ class TaskFormDialog extends StatefulWidget {
     required this.formType,
     this.taskId,
     required this.tasksBloc,
-    required this.simpleDialogContext,
+    required this.taskFormDialogContext,
   }) : assert(
           (formType == TaskFormType.update && taskId == null) == false,
           'Update type form needs task ID.',
@@ -33,7 +34,7 @@ class TaskFormDialog extends StatefulWidget {
   final TaskFormType formType;
   final String? taskId;
   final TasksBloc tasksBloc;
-  final BuildContext simpleDialogContext;
+  final BuildContext taskFormDialogContext;
 
   @override
   State<TaskFormDialog> createState() => _TaskFormDialogState();
@@ -47,6 +48,7 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
   final _descriptionFieldController = TextEditingController();
   TaskModel? task;
 
+  /// Returns a boolean that indicates whether there is data in the form that has not been saved.
   bool _hasFormData() {
     final formData = _getData();
 
@@ -58,6 +60,7 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
     }
   }
 
+  /// Gets the form data and returns it in a CreateTaskModel class.
   CreateTaskModel _getData() {
     final title = _titleFieldController.text;
     final description = _descriptionFieldController.text;
@@ -68,14 +71,7 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
     );
   }
 
-  Widget _getBody() {
-    return TaskFormWidget(
-      formKey: _formKey,
-      titleFieldController: _titleFieldController,
-      descriptionFieldController: _descriptionFieldController,
-    );
-  }
-
+  /// Shows a dialog to confirm whether you really want to close the task form.
   void _showConfirmDiscardDialog(
     VoidCallback closeFormDialog,
   ) {
@@ -101,6 +97,7 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
     );
   }
 
+  /// Fetches data for a task based on its ID.
   Future<void> _fetchData() async {
     final taskRepository = AppDataProvider.of(context)!.taskRepository;
 
@@ -116,17 +113,19 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
         () => _fetchData(),
         action1: (closeSimpleDialog) {
           closeSimpleDialog();
-          Navigator.pop(widget.simpleDialogContext);
+          Navigator.pop(widget.taskFormDialogContext);
         },
       );
     }
   }
 
+  /// Fill in all fields with the task data.
   void _fillFields() {
     _titleFieldController.text = task!.title;
     _descriptionFieldController.text = task!.description;
   }
 
+  /// Sends task data when all form fields are valid.
   Future<void> _sendTask(
     VoidCallback closeFormDialog,
   ) async {
@@ -166,6 +165,7 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
     }
   }
 
+  /// Shows a dialog with an error message related to sending or retrieving a task.
   void _showErrorDialog(
     Failure failure,
     VoidCallback retryAction, {
@@ -204,7 +204,7 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialogWidget(
-      simpleDialogContext: widget.simpleDialogContext,
+      simpleDialogContext: widget.taskFormDialogContext,
       title:
           '${widget.formType == TaskFormType.creation ? 'Criar' : 'Atualizar'} Tarefa',
       body: FutureBuilder(
@@ -228,7 +228,11 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
             );
           }
 
-          return _getBody();
+          return TaskFormWidget(
+            formKey: _formKey,
+            titleFieldController: _titleFieldController,
+            descriptionFieldController: _descriptionFieldController,
+          );
         },
       ),
       actionTitle1: 'Fechar',
@@ -252,22 +256,3 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
   }
 }
 
-class CenterContentWidget extends StatelessWidget {
-  const CenterContentWidget({
-    super.key,
-    required this.content,
-  });
-
-  final Widget content;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100.0,
-      width: double.infinity,
-      child: Center(
-        child: content,
-      ),
-    );
-  }
-}

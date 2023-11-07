@@ -21,7 +21,7 @@ class FloatingActionButtonWidget extends StatelessWidget {
         return TaskFormDialog(
           formType: TaskFormType.creation,
           tasksBloc: tasksBloc,
-          simpleDialogContext: simpleDialogContext,
+          taskFormDialogContext: simpleDialogContext,
         );
       },
     );

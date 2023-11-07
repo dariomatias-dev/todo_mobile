@@ -102,7 +102,7 @@ class _TaskCardWidgetState extends State<TaskCardWidget> {
           formType: TaskFormType.update,
           taskId: widget.task.id,
           tasksBloc: tasksBloc,
-          simpleDialogContext: simpleDialogContext,
+          taskFormDialogContext: simpleDialogContext,
         );
       },
     );
